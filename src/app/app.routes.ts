@@ -5,6 +5,6 @@ export const routes: Routes = [
   {
     path: '',
     loadChildren: () =>
-      import('./dashboard/dashboard.module').then(m => m.DashboardModule),
+      import('./icare/icare.module').then(m => m.IcareModule),
   },
 ];

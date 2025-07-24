@@ -24,6 +24,7 @@ export class LandingPageComponent implements AfterViewInit {
   myViaChart() {
     console.log('caleed');
     this.root = am5.Root.new('viaChart');
+
     if ((this.root as any)._logo) {
       (this.root as any)._logo.dispose();
     }
@@ -52,6 +53,7 @@ export class LandingPageComponent implements AfterViewInit {
       { sourceName: 'Cross Sales', value: 97 },
       { sourceName: 'Portal Enquiry', value: 7 },
     ]);
+
     var legend = chart.children.push(
       am5.Legend.new(this.root, {
         centerX: am5.percent(50),
@@ -59,17 +61,30 @@ export class LandingPageComponent implements AfterViewInit {
         y: am5.percent(10),
         marginTop: 15,
         marginBottom: 15,
-
         layout: this.root.horizontalLayout,
       })
     );
+
+    legend.labels.template.setAll({
+      text: '{sourceName}',
+    });
+
     series.slices.template.set('toggleKey', 'none');
     series.labels.template.set('forceHidden', true);
     series.ticks.template.set('forceHidden', true);
     series.labels.template.setAll({ text: '{value}', inside: true });
     series.slices.template.states.create('hover', { scale: 1 });
-
+    legend.valueLabels.template.set('visible', false);
     legend.data.setAll(series.dataItems);
+    legend.itemContainers.template.setAll({
+      marginLeft: 10,
+    });
+    legend.markerRectangles.template.setAll({
+      cornerRadiusTL: 10,
+      cornerRadiusTR: 10,
+      cornerRadiusBL: 10,
+      cornerRadiusBR: 10,
+    });
   }
 
   mysalesRequest() {
@@ -131,8 +146,6 @@ export class LandingPageComponent implements AfterViewInit {
 
     (root as any)._logo.dispose();
 
-    // Create chart
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/
     let chart = root.container.children.push(
       am5xy.XYChart.new(root, {
         panX: false,
@@ -143,16 +156,6 @@ export class LandingPageComponent implements AfterViewInit {
       })
     );
 
-    // Add legend
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
-    var legend = chart.children.push(
-      am5.Legend.new(root, {
-        centerX: am5.p50,
-        x: am5.p50,
-      })
-    );
-
-    // Data
     let data = [
       {
         name: 'High',
@@ -185,8 +188,7 @@ export class LandingPageComponent implements AfterViewInit {
         am5.color(0x86a873),
         am5.color(0xbb9f06),
       ]);
-    // Create axes
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
+
     let yAxis = chart.yAxes.push(
       am5xy.CategoryAxis.new(root, {
         categoryField: 'name',
@@ -214,8 +216,6 @@ export class LandingPageComponent implements AfterViewInit {
       })
     );
 
-    // Add series
-    // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
     function createSeries(field: any, name: any) {
       let series = chart.series.push(
         am5xy.ColumnSeries.new(root, {
@@ -224,7 +224,6 @@ export class LandingPageComponent implements AfterViewInit {
           yAxis: yAxis,
           valueXField: field,
           categoryYField: 'name',
-          // sequencedInterpolation: true,
         })
       );
 
@@ -249,9 +248,26 @@ export class LandingPageComponent implements AfterViewInit {
         });
       });
 
+      var legend = chart.children.push(
+        am5.Legend.new(root, {
+          centerX: am5.percent(90),
+          x: am5.percent(50),
+          y: am5.percent(60),
+          nameField: 'name',
+          layout: am5.GridLayout.new(root, {
+            maxColumns: 2,
+            fixedWidthGrid: true,
+          }),
+        })
+      );
+      legend.itemContainers.template.setAll({
+        paddingBottom: 15,
+      });
+
       series.data.setAll(data);
       series.appear();
 
+      legend.data.setAll(data);
       return series;
     }
 
@@ -262,16 +278,6 @@ export class LandingPageComponent implements AfterViewInit {
 
     // Add legend
     // https://www.amcharts.com/docs/v5/charts/xy-chart/legend-xy-series/
-
-    let legendsRight = chart.children.push(
-      am5.Legend.new(root, {
-        centerY: am5.percent(10),
-        y: am5.percent(10),
-        layout: this.root.verticalLayout,
-        
-      })
-    );
-    legendsRight.data.setAll(data);
   }
 
   mysalesFunnel() {
@@ -335,7 +341,7 @@ export class LandingPageComponent implements AfterViewInit {
         centerX: am5.percent(10),
         x: am5.percent(0),
 
-        centerY: am5.percent(60),
+        centerY: am5.percent(45),
         y: am5.percent(30),
         layout: this.root.verticalLayout,
         nameField: 'name',
@@ -352,6 +358,12 @@ export class LandingPageComponent implements AfterViewInit {
         nameField: 'percentage',
       })
     );
+    legendsLeft.itemContainers.template.setAll({
+      paddingBottom: 20,
+    });
+    legendsRight.itemContainers.template.setAll({
+      paddingBottom: 20,
+    });
     legendsLeft.data.setAll(data);
     legendsRight.data.setAll(data);
   }
